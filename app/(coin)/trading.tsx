@@ -1,69 +1,51 @@
 import React, { useState, useCallback } from "react";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
-import { TabView, TabBar } from "react-native-tab-view";
+import { StyleSheet, View, useWindowDimensions, Text } from "react-native";
+import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Chart from "./chart";
 import OrderBook from "./orderBook";
 import { useLocalSearchParams } from "expo-router";
-
-const routes = [
-  { key: "chart", title: "차트" },
-  { key: "orderBook", title: "호가창" },
-];
+import type { SceneRendererProps } from "react-native-tab-view";
 
 const TradingScreen = () => {
-  const { symbol } = useLocalSearchParams();
+  const { symbol } = useLocalSearchParams() as { symbol: string };
   const insets = useSafeAreaInsets();
-  const layout = useWindowDimensions();
-  const [index, setIndex] = useState(0);
-  const [selectedScreen, setSelectedScreen] = useState("chart");
-
-  const handleIndexChange = (newIndex: number) => {
-    setIndex(newIndex);
-    setSelectedScreen(routes[newIndex].key);
-  };
-
-  const renderScene = useCallback(() => {
-    switch (selectedScreen) {
-      case "chart":
-        return <Chart symbol={symbol as string} />;
-      case "orderBook":
-        return <OrderBook symbol={symbol as string} />;
-      default:
-        return null;
-    }
-  }, [selectedScreen, symbol]);
-
-  const renderTabBar = (props: any) => (
-    <TabBar
-      {...props}
-      indicatorStyle={{ backgroundColor: "blue", height: 3 }}
-      style={{ backgroundColor: "#fff" }}
-      labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-      activeColor="blue"
-      inactiveColor="gray"
-    />
+  const FirstRoute = () => (
+    <View style={{ flex: 1 }}>
+      <Chart symbol={symbol} />
+    </View>
   );
 
-  return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={handleIndexChange}
-        initialLayout={{ width: layout.width }}
-        renderTabBar={renderTabBar}
-        animationEnabled={false}
-      />
+  const SecondRoute = () => (
+    <View style={{ flex: 1 }}>
+      <OrderBook symbol={symbol} />
     </View>
+  );
+
+  const renderScene = SceneMap({
+    first: FirstRoute,
+    second: SecondRoute,
+  });
+
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: "first", title: "chart" },
+    { key: "second", title: "order book" },
+  ]);
+
+  return (
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+      style={{ paddingTop: insets.top }}
+    />
   );
 };
 
 export default TradingScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});
+const styles = StyleSheet.create({});

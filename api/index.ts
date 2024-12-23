@@ -49,3 +49,13 @@ export const fetchKlineData = async (symbol: string): Promise<KlineData[]> => {
     close: parseFloat(item[4]),
   }));
 };
+
+export const fetchOrderBookData = async (symbol: string) => {
+  const response = await fetch(
+    `https://api.binance.com/api/v3/depth?symbol=${symbol.toUpperCase()}&limit=10`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch order book data");
+  }
+  return response.json();
+};
