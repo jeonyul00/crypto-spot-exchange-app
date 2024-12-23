@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchTickerPrices, TickerPrice } from "@/api";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// TODO: 라우트 대신 네비게이션으로 바꾸기
 const index = () => {
   const router = useRouter();
   const inset = useSafeAreaInsets();
@@ -23,12 +24,38 @@ const index = () => {
 
   const render = React.useCallback(
     ({ item }: { item: TickerPrice }) => (
-      <TouchableOpacity style={styles.listItem}>
+      <TouchableOpacity
+        style={styles.listItem}
+        onPress={() =>
+          router.push({
+            pathname: "/trading",
+            params: { symbol: item.symbol },
+          })
+        }
+      >
         <Text>{item.symbol}</Text>
         <Text>{item.price}</Text>
       </TouchableOpacity>
     ),
     [router]
+  );
+
+  const ListHeaderComponent = (
+    <View style={styles.headerContainer}>
+      <Text style={styles.header}>Coin List</Text>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search coins"
+        value={searchTerm}
+        onChangeText={(text) => setSearchTerm(text)}
+      />
+    </View>
+  );
+
+  const ListEmptyComponent = (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>No coins found.</Text>
+    </View>
   );
 
   const filteredData = React.useMemo(() => {
@@ -55,17 +82,6 @@ const index = () => {
       </View>
     );
   }
-  const ListHeaderComponent = (
-    <View style={styles.headerContainer}>
-      <Text style={styles.header}>Coin List</Text>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search coins"
-        value={searchTerm}
-        onChangeText={(text) => setSearchTerm(text)}
-      />
-    </View>
-  );
 
   return (
     <View style={[styles.container, { paddingTop: inset.top }]}>
@@ -75,6 +91,7 @@ const index = () => {
         keyExtractor={(item) => item.symbol}
         renderItem={render}
         ListHeaderComponent={ListHeaderComponent}
+        ListEmptyComponent={ListEmptyComponent}
       />
     </View>
   );
@@ -86,8 +103,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    justifyContent: "center",
-    alignItems: "center",
   },
   headerContainer: {
     marginBottom: 16,
@@ -113,5 +128,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     marginBottom: 16,
     alignSelf: "stretch",
+  },
+  emptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#888",
   },
 });
