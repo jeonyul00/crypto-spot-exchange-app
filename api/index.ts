@@ -1,7 +1,12 @@
 // TODO: env로 숨기기
 const BASE_URL = "https://api.binance.com/api/v3";
 
-export const fetchTickerPrices = async () => {
+export type TickerPrice = {
+  symbol: string;
+  price: string;
+};
+
+export const fetchTickerPrices = async (): Promise<TickerPrice[]> => {
   const response = await fetch(`${BASE_URL}/ticker/price`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
