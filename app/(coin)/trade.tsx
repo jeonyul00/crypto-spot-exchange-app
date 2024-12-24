@@ -7,25 +7,22 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRecoilState } from "recoil";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useNavigation } from "@react-navigation/native";
+import { priceState, purposeState } from "@/atom";
 
 const Trade = () => {
-  const { symbol, purpose, price } = useLocalSearchParams() as {
-    symbol: string;
-    purpose: "buy" | "sell";
-    price: string;
-  };
-
-  const navigation = useNavigation();
+  const [purpose] = useRecoilState(purposeState);
+  const [price] = useRecoilState(priceState);
   const [quantity, setQuantity] = useState<string>("");
-  const { debounce } = useDebounce(1000);
-  const router = useRouter();
+  const navigation = useNavigation<any>();
+  const { debounce } = useDebounce(500);
 
   useEffect(() => {
-    const headerTitle = purpose === "buy" ? "구매" : "판매";
-    navigation.setOptions({ headerTitle });
+    navigation.setOptions({
+      title: purpose === "buy" ? "buy" : "sell",
+    });
   }, [navigation, purpose]);
 
   const totalAmount = () => {
@@ -58,7 +55,7 @@ const Trade = () => {
                 {
                   text: "확인",
                   onPress: () => {
-                    router.replace("/");
+                    navigation.replace("index");
                   },
                 },
               ]
@@ -71,9 +68,7 @@ const Trade = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>
-        {symbol} {purpose === "buy" ? "구매" : "판매"}
-      </Text>
+      <Text style={styles.header}>{purpose === "buy" ? "구매" : "판매"}</Text>
       <Text style={styles.info}>선택된 가격: {price}</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>수량:</Text>

@@ -10,13 +10,18 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchOrderBookData } from "@/api";
 import { useRouter } from "expo-router";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useRecoilState } from "recoil";
+
 import LoadingScreen from "@/components/ui/Loading";
 import ErrorScreen from "@/components/ErrorScreen";
+import { priceState, purposeState } from "@/atom";
 
 const OrderBook = ({ symbol }: { symbol: string }) => {
   const [bids, setBids] = useState<string[][]>([]);
   const [asks, setAsks] = useState<string[][]>([]);
-  const { debounce } = useDebounce(1000);
+  const [purpose, setPurpose] = useRecoilState(purposeState);
+  const [price, setPrice] = useRecoilState(priceState);
+  const { debounce } = useDebounce(500);
 
   const router = useRouter();
 
@@ -63,12 +68,12 @@ const OrderBook = ({ symbol }: { symbol: string }) => {
     };
   }, [symbol]);
 
-  const handleSelect = (type: "buy" | "sell", price: string) => {
+  const handleSelect = (type: "buy" | "sell", selectedPrice: string) => {
+    setPurpose(type);
+    setPrice(selectedPrice);
+
     debounce(() => {
-      router.push({
-        pathname: "/trade",
-        params: { symbol, purpose: type, price },
-      });
+      router.push("/trade");
     });
   };
 

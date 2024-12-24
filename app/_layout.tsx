@@ -29,7 +29,6 @@ export default function RootLayout() {
             screenOptions={{
               headerShown: true,
               headerStyle: { backgroundColor: "#fff" },
-              headerTitle: "",
             }}
           >
             <Stack.Screen name="index" options={{ headerTitle: "Coin List" }} />
