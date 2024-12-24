@@ -15,8 +15,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 // TODO: 라우트 대신 네비게이션으로 바꾸기
 // TODO: useRouter 페이지마다 선언해야되나? 프롭스로 넘길 수 있을 것 같은데 알아보기
 // TODO: 디바운스 걸기
+// TODO: 탑 탭 안예쁨
 // TODO: 백버튼 넣기
 // TODO: 트레이드 시 메인 화면으로 넘어가면서 pop
+// TODO: recoil 어디에 적용해야되냐
+// TODO: splash
+// TODO: url env로 숨기기
+// TODO: chart 디테일하게 만들것
+// TODO: 로딩화면
+// TODO: 에러 화면
 const index = () => {
   const router = useRouter();
   const inset = useSafeAreaInsets();
@@ -69,7 +76,6 @@ const index = () => {
     );
   }, [data, searchTerm]);
 
-  // TODO: 로딩화면
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -78,7 +84,6 @@ const index = () => {
     );
   }
 
-  // TODO: 에러 화면
   if (isError) {
     return (
       <View style={styles.container}>

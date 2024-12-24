@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,9 +12,14 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  useEffect(() => {
-    SplashScreen.hideAsync();
+  const onReady = useCallback(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await SplashScreen.hideAsync();
   }, []);
+
+  useEffect(() => {
+    onReady();
+  }, [onReady]);
 
   return (
     <RecoilRoot>

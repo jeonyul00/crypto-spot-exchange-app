@@ -1,4 +1,3 @@
-// TODO: env로 숨기기
 const BASE_URL = "https://api.binance.com/api/v3";
 
 export type TickerPrice = {
