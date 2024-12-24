@@ -1,11 +1,10 @@
-import React, { useState, useCallback } from "react";
-import { StyleSheet, View, useWindowDimensions, Text } from "react-native";
+import React from "react";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Chart from "./chart";
 import OrderBook from "./orderBook";
 import { useLocalSearchParams } from "expo-router";
-import type { SceneRendererProps } from "react-native-tab-view";
 
 const TradingScreen = () => {
   const { symbol } = useLocalSearchParams() as { symbol: string };

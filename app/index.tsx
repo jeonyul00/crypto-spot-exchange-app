@@ -17,7 +17,6 @@ import ErrorScreen from "@/components/ErrorScreen";
 // TODO: 라우트 대신 네비게이션으로 바꾸기
 // TODO: 백버튼 넣기
 // TODO: recoil 어디에 적용해야되냐
-// TODO: chart 디테일하게 만들것
 const index = () => {
   const router = useRouter();
   const inset = useSafeAreaInsets();
