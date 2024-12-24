@@ -9,10 +9,13 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchOrderBookData } from "@/api";
 import { useRouter } from "expo-router";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const OrderBook = ({ symbol }: { symbol: string }) => {
   const [bids, setBids] = useState<string[][]>([]);
   const [asks, setAsks] = useState<string[][]>([]);
+  const { debounce } = useDebounce(1000);
+
   const router = useRouter();
 
   const { data, isLoading, isError } = useQuery({
@@ -59,9 +62,11 @@ const OrderBook = ({ symbol }: { symbol: string }) => {
   }, [symbol]);
 
   const handleSelect = (type: "buy" | "sell", price: string) => {
-    router.push({
-      pathname: "/trade",
-      params: { symbol, purpose: type, price },
+    debounce(() => {
+      router.push({
+        pathname: "/trade",
+        params: { symbol, purpose: type, price },
+      });
     });
   };
 

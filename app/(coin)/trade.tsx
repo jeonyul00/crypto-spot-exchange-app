@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const Trade = () => {
   const { symbol, purpose, price } = useLocalSearchParams() as {
@@ -17,6 +18,7 @@ const Trade = () => {
   };
 
   const [quantity, setQuantity] = useState<string>("");
+  const { debounce } = useDebounce(1000);
 
   const totalAmount = () => {
     const qty = Number(quantity);
@@ -70,7 +72,10 @@ const Trade = () => {
       <Text style={styles.totalAmount}>
         총 금액: {totalAmount().toFixed(2)}
       </Text>
-      <TouchableOpacity style={styles.confirmButton} onPress={handleTrade}>
+      <TouchableOpacity
+        style={styles.confirmButton}
+        onPress={() => debounce(handleTrade)}
+      >
         <Text style={styles.confirmButtonText}>
           {purpose === "buy" ? "구매하기" : "판매하기"}
         </Text>
