@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useDebounce } from "@/hooks/useDebounce";
 
 const Trade = () => {
@@ -19,6 +19,7 @@ const Trade = () => {
 
   const [quantity, setQuantity] = useState<string>("");
   const { debounce } = useDebounce(1000);
+  const router = useRouter();
 
   const totalAmount = () => {
     const qty = Number(quantity);
@@ -45,7 +46,15 @@ const Trade = () => {
           onPress: () => {
             Alert.alert(
               "완료",
-              `${qty}개 ${purpose === "buy" ? "구매" : "판매"}되었습니다.`
+              `${qty}개 ${purpose === "buy" ? "구매" : "판매"}되었습니다.`,
+              [
+                {
+                  text: "확인",
+                  onPress: () => {
+                    router.replace("/");
+                  },
+                },
+              ]
             );
           },
         },

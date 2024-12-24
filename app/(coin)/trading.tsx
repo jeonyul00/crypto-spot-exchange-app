@@ -42,6 +42,15 @@ const TradingScreen = () => {
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
       style={{ paddingTop: insets.top }}
+      renderTabBar={(props) => (
+        <TabBar
+          {...props}
+          indicatorStyle={{ backgroundColor: "blue", height: 1 }}
+          style={{ backgroundColor: "#fff" }}
+          activeColor="blue"
+          inactiveColor="gray"
+        />
+      )}
     />
   );
 };

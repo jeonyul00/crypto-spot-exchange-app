@@ -15,12 +15,8 @@ import LoadingScreen from "@/components/ui/Loading";
 import ErrorScreen from "@/components/ErrorScreen";
 
 // TODO: 라우트 대신 네비게이션으로 바꾸기
-// TODO: useRouter 페이지마다 선언해야되나? 프롭스로 넘길 수 있을 것 같은데 알아보기
-// TODO: 탑 탭 안예쁨
 // TODO: 백버튼 넣기
-// TODO: 트레이드 시 메인 화면으로 넘어가면서 pop
 // TODO: recoil 어디에 적용해야되냐
-// TODO: url env로 숨기기
 // TODO: chart 디테일하게 만들것
 const index = () => {
   const router = useRouter();
