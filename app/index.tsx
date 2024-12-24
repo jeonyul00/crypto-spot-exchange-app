@@ -11,6 +11,8 @@ import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTickerPrices, TickerPrice } from "@/api";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import LoadingScreen from "@/components/ui/Loading";
+import ErrorScreen from "@/components/ErrorScreen";
 
 // TODO: 라우트 대신 네비게이션으로 바꾸기
 // TODO: useRouter 페이지마다 선언해야되나? 프롭스로 넘길 수 있을 것 같은데 알아보기
@@ -20,8 +22,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 // TODO: recoil 어디에 적용해야되냐
 // TODO: url env로 숨기기
 // TODO: chart 디테일하게 만들것
-// TODO: 로딩화면
-// TODO: 에러 화면
 const index = () => {
   const router = useRouter();
   const inset = useSafeAreaInsets();
@@ -75,19 +75,11 @@ const index = () => {
   }, [data, searchTerm]);
 
   if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   if (isError) {
-    return (
-      <View style={styles.container}>
-        <Text>Error fetching data</Text>
-      </View>
-    );
+    return <ErrorScreen />;
   }
 
   return (

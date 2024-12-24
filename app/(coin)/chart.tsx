@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { fetchKlineData, KlineData } from "@/api";
 import { CartesianChart, Line } from "victory-native";
+import ErrorScreen from "@/components/ErrorScreen";
+import LoadingScreen from "@/components/ui/Loading";
 
 const Chart = ({ symbol }: { symbol: string }) => {
   const { width } = useWindowDimensions();
@@ -12,19 +14,11 @@ const Chart = ({ symbol }: { symbol: string }) => {
   });
 
   if (isLoading) {
-    return (
-      <View style={styles.center}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   if (isError || !data) {
-    return (
-      <View style={styles.center}>
-        <Text>Error loading chart data.</Text>
-      </View>
-    );
+    return <ErrorScreen />;
   }
 
   const chartData = data.map((item, index) => ({

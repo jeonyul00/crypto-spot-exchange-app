@@ -10,6 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchOrderBookData } from "@/api";
 import { useRouter } from "expo-router";
 import { useDebounce } from "@/hooks/useDebounce";
+import LoadingScreen from "@/components/ui/Loading";
+import ErrorScreen from "@/components/ErrorScreen";
 
 const OrderBook = ({ symbol }: { symbol: string }) => {
   const [bids, setBids] = useState<string[][]>([]);
@@ -90,19 +92,11 @@ const OrderBook = ({ symbol }: { symbol: string }) => {
       );
 
   if (isLoading) {
-    return (
-      <View style={styles.center}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   if (isError) {
-    return (
-      <View style={styles.center}>
-        <Text>Error loading order book data.</Text>
-      </View>
-    );
+    return <ErrorScreen />;
   }
 
   return (
