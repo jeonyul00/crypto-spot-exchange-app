@@ -10,16 +10,11 @@ import React from "react";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTickerPrices, TickerPrice } from "@/api";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/ui/Loading";
 import ErrorScreen from "@/components/ErrorScreen";
 
-// TODO: 라우트 대신 네비게이션으로 바꾸기
-// TODO: 백버튼 넣기
-// TODO: recoil 어디에 적용해야되냐
 const index = () => {
   const router = useRouter();
-  const inset = useSafeAreaInsets();
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const { data, isLoading, isError } = useQuery({
     queryKey: ["tickerPrices"],
@@ -46,7 +41,6 @@ const index = () => {
 
   const ListHeaderComponent = (
     <View style={styles.headerContainer}>
-      <Text style={styles.header}>Coin List</Text>
       <TextInput
         style={styles.searchInput}
         placeholder="Search coins"
@@ -78,7 +72,7 @@ const index = () => {
   }
 
   return (
-    <View style={[styles.container, { paddingTop: inset.top }]}>
+    <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={filteredData}
@@ -86,6 +80,7 @@ const index = () => {
         renderItem={render}
         ListHeaderComponent={ListHeaderComponent}
         ListEmptyComponent={ListEmptyComponent}
+        style={{ paddingTop: 20 }}
       />
     </View>
   );

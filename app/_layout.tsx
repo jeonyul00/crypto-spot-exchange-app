@@ -25,8 +25,14 @@ export default function RootLayout() {
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider value={DefaultTheme}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
+          <Stack
+            screenOptions={{
+              headerShown: true,
+              headerStyle: { backgroundColor: "#fff" },
+              headerTitle: "",
+            }}
+          >
+            <Stack.Screen name="index" options={{ headerTitle: "Coin List" }} />
             <Stack.Screen name="+not-found" />
           </Stack>
           <StatusBar style="auto" />

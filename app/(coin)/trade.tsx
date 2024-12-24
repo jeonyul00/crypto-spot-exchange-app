@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useNavigation } from "@react-navigation/native";
 
 const Trade = () => {
   const { symbol, purpose, price } = useLocalSearchParams() as {
@@ -17,9 +18,15 @@ const Trade = () => {
     price: string;
   };
 
+  const navigation = useNavigation();
   const [quantity, setQuantity] = useState<string>("");
   const { debounce } = useDebounce(1000);
   const router = useRouter();
+
+  useEffect(() => {
+    const headerTitle = purpose === "buy" ? "구매" : "판매";
+    navigation.setOptions({ headerTitle });
+  }, [navigation, purpose]);
 
   const totalAmount = () => {
     const qty = Number(quantity);

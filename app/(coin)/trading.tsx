@@ -1,14 +1,21 @@
 import React from "react";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Chart from "./chart";
 import OrderBook from "./orderBook";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 
 const TradingScreen = () => {
   const { symbol } = useLocalSearchParams() as { symbol: string };
-  const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: "first", title: "Chart" },
+    { key: "second", title: "Order Book" },
+  ]);
+
   const FirstRoute = () => (
     <View style={{ flex: 1 }}>
       <Chart symbol={symbol} />
@@ -26,13 +33,10 @@ const TradingScreen = () => {
     second: SecondRoute,
   });
 
-  const layout = useWindowDimensions();
-
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: "first", title: "chart" },
-    { key: "second", title: "order book" },
-  ]);
+  React.useEffect(() => {
+    const title = routes[index].title;
+    navigation.setOptions({ headerTitle: title });
+  }, [index, navigation]);
 
   return (
     <TabView
@@ -40,7 +44,6 @@ const TradingScreen = () => {
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
-      style={{ paddingTop: insets.top }}
       renderTabBar={(props) => (
         <TabBar
           {...props}
@@ -55,5 +58,3 @@ const TradingScreen = () => {
 };
 
 export default TradingScreen;
-
-const styles = StyleSheet.create({});

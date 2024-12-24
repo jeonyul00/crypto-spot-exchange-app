@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, Dimensions, ScrollView } from "react-native";
 import Svg, { Rect, Line } from "react-native-svg";
 import { useQuery } from "@tanstack/react-query";
 import { fetchKlineData, KlineData } from "@/api";
@@ -8,7 +8,7 @@ import LoadingScreen from "@/components/ui/Loading";
 
 const Chart = ({ symbol }: { symbol: string }) => {
   const { width, height } = Dimensions.get("window");
-  const chartHeight = height; // 화면 전체 높이를 차트 높이로 설정
+  const chartHeight = height;
   const { data, isLoading, isError } = useQuery<KlineData[]>({
     queryKey: ["klineData", symbol],
     queryFn: () => fetchKlineData(symbol),
@@ -37,9 +37,7 @@ const Chart = ({ symbol }: { symbol: string }) => {
         {data.map((item, index) => {
           const x = index * (width / data.length);
           const candleWidth = (width / data.length) * 0.6;
-
           const color = item.close > item.open ? "green" : "red";
-
           return (
             <React.Fragment key={index}>
               <Line
