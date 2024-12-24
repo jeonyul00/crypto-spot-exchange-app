@@ -13,6 +13,10 @@ import { fetchTickerPrices, TickerPrice } from "@/api";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // TODO: 라우트 대신 네비게이션으로 바꾸기
+// TODO: useRouter 페이지마다 선언해야되나? 프롭스로 넘길 수 있을 것 같은데 알아보기
+// TODO: 디바운스 걸기
+// TODO: 백버튼 넣기
+// TODO: 트레이드 시 메인 화면으로 넘어가면서 pop
 const index = () => {
   const router = useRouter();
   const inset = useSafeAreaInsets();

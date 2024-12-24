@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchKlineData, KlineData } from "@/api";
 import { CartesianChart, Line } from "victory-native";
 
+// TODO: chart 디테일하게 만들것
 const Chart = ({ symbol }: { symbol: string }) => {
   const { width } = useWindowDimensions();
   const { data, isLoading, isError } = useQuery<KlineData[]>({

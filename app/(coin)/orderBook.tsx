@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { fetchOrderBookData } from "@/api";
-import { useWindowDimensions } from "react-native";
+import { useRouter } from "expo-router";
 
 const OrderBook = ({ symbol }: { symbol: string }) => {
   const [bids, setBids] = useState<string[][]>([]);
   const [asks, setAsks] = useState<string[][]>([]);
+  const router = useRouter();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["orderBook", symbol],
@@ -28,13 +35,10 @@ const OrderBook = ({ symbol }: { symbol: string }) => {
     ws.onmessage = (event) => {
       try {
         const webSocketData = JSON.parse(event.data);
-        console.log("WebSocket data:", webSocketData);
 
         if (Array.isArray(webSocketData.b) && Array.isArray(webSocketData.a)) {
           setBids(webSocketData.b.slice(0, 10));
           setAsks(webSocketData.a.slice(0, 10));
-        } else {
-          console.error("Invalid WebSocket data format:", webSocketData);
         }
       } catch (error) {
         console.error("WebSocket parsing error:", error);
@@ -54,12 +58,31 @@ const OrderBook = ({ symbol }: { symbol: string }) => {
     };
   }, [symbol]);
 
-  const renderOrder = ({ item }: { item: string[] }) => (
-    <View style={styles.row}>
-      <Text style={[styles.text, { color: "red" }]}>{item[0]}</Text>
-      <Text style={[styles.text, { color: "green" }]}>{item[1]}</Text>
-    </View>
-  );
+  const handleSelect = (type: "buy" | "sell", price: string) => {
+    router.push({
+      pathname: "/trade",
+      params: { symbol, purpose: type, price },
+    });
+  };
+
+  const renderOrder =
+    (type: "buy" | "sell") =>
+    ({ item }: { item: string[] }) =>
+      (
+        <TouchableOpacity onPress={() => handleSelect(type, item[0])}>
+          <View style={styles.row}>
+            <Text
+              style={[
+                styles.text,
+                type === "sell" ? { color: "red" } : { color: "green" },
+              ]}
+            >
+              {item[0]}
+            </Text>
+            <Text style={styles.text}>{item[1]}</Text>
+          </View>
+        </TouchableOpacity>
+      );
 
   if (isLoading) {
     return (
@@ -85,7 +108,7 @@ const OrderBook = ({ symbol }: { symbol: string }) => {
         <FlatList
           data={asks}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={renderOrder}
+          renderItem={renderOrder("sell")}
         />
       </View>
       <View style={styles.orderContainer}>
@@ -93,7 +116,7 @@ const OrderBook = ({ symbol }: { symbol: string }) => {
         <FlatList
           data={bids}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={renderOrder}
+          renderItem={renderOrder("buy")}
         />
       </View>
     </View>
