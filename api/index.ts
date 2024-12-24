@@ -13,7 +13,6 @@ export type KlineData = {
   close: number;
 };
 
-// list
 export const fetchTickerPrices = async (): Promise<TickerPrice[]> => {
   const response = await fetch(`${BASE_URL}/ticker/price`, {
     method: "GET",
@@ -28,7 +27,6 @@ export const fetchTickerPrices = async (): Promise<TickerPrice[]> => {
   return data;
 };
 
-// line
 export const fetchKlineData = async (symbol: string): Promise<KlineData[]> => {
   const response = await fetch(
     `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=1h`
